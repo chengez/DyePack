@@ -1,0 +1,27 @@
+{
+  "Llama-2": {
+    "user_start": "[INST] ",
+    "user_end": "  [/INST] ",
+    "assistant_start": ""
+  },
+  "Mistral-v0.1": {
+    "user_start": "[INST] ",
+    "user_end": "  [/INST] ",
+    "assistant_start": ""
+  },
+  "Llama-3": {
+    "user_start": "<|start_header_id|>user<|end_header_id|>\n\n",
+    "user_end": "<|eot_id|>",
+    "assistant_start": "<|start_header_id|>assistant<|end_header_id|>\n\n"
+  },
+  "Qwen2_5": {
+    "user_start": "<|im_start|>user\n",
+    "user_end": "<|im_end|>\n",
+    "assistant_start": "<|im_start|>assistant\n"
+  },
+  "Gemma-1.1": {
+    "user_start": "<start_of_turn>user\n",
+    "user_end": "<end_of_turn>\n",
+    "assistant_start": "<start_of_turn>model\n"
+  }
+}

@@ -1,0 +1,96 @@
+exp_name: biology
+model_cache_dir: /fs/cml-scratch/yzcheng/cache2/
+save_folder: saved_models_new
+data_name: MMLU_Pro
+
+tokenizer:
+  _component_: torchtune.models.llama2.llama2_tokenizer
+  path: ${model_cache_dir}/Llama-2-7b-chat-hf/tokenizer.model
+  max_seq_len: 4096
+
+# Tokenizer is passed into the dataset in the recipe
+dataset:
+  _component_: torchtune.datasets.instruct_dataset
+  source: csv
+  data_files: ${data_name}/data/${exp_name}/torchtune_data.csv
+  split: train
+
+# Model Arguments
+model:
+  _component_: torchtune.models.llama2.llama2_7b
+
+checkpointer:
+  _component_: torchtune.training.FullModelHFCheckpointer
+  checkpoint_dir: ${model_cache_dir}/Llama-2-7b-chat-hf
+  checkpoint_files: [
+    pytorch_model-00001-of-00002.bin,
+    pytorch_model-00002-of-00002.bin
+  ]
+  recipe_checkpoint: null
+  output_dir: ${save_folder}/Llama-2-7b-chat-hf_${exp_name}
+  model_type: LLAMA2
+  safe_serialization: True
+  
+resume_from_checkpoint: False
+
+# Fine-tuning arguments
+batch_size: 2
+epochs: 2
+optimizer:
+  _component_: torch.optim.AdamW
+  fused: True
+  lr: 2e-5
+lr_scheduler:
+  _component_: torchtune.training.lr_schedulers.get_cosine_schedule_with_warmup
+  num_warmup_steps: 100
+optimizer_in_bwd: True  # True saves memory. Requires gradient_accumulation_steps=1
+loss:
+  _component_: torchtune.modules.loss.CEWithChunkedOutputLoss
+max_steps_per_epoch: null
+gradient_accumulation_steps: 1  # Use to increase virtual batch size
+compile: False  # pytorch compile, set to true for better perf/memory
+
+# Training environment
+device: cuda
+
+# Memory management
+enable_activation_checkpointing: True  # True reduces memory
+enable_activation_offloading: True  # True reduces memory
+
+seed: 8
+shuffle: False
+# Reduced precision
+dtype: bf16
+
+# Logging
+metric_logger:
+  _component_: torchtune.training.metric_logging.DiskLogger
+  log_dir: ${output_dir}
+output_dir: logs
+log_every_n_steps: 1
+log_peak_memory_stats: True
+
+# Profiler (disabled)
+profiler:
+  _component_: torchtune.training.setup_torch_profiler
+  enabled: False
+
+  #Output directory of trace artifacts
+  output_dir: ${output_dir}/profiling_outputs
+
+  #`torch.profiler.ProfilerActivity` types to trace
+  cpu: True
+  cuda: True
+
+  #trace options passed to `torch.profiler.profile`
+  profile_memory: False
+  with_stack: False
+  record_shapes: True
+  with_flops: False
+
+  # `torch.profiler.schedule` options:
+  # wait_steps -> wait, warmup_steps -> warmup, active_steps -> active, num_cycles -> repeat
+  wait_steps: 5
+  warmup_steps: 3
+  active_steps: 2
+  num_cycles: 1
