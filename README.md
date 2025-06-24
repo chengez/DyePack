@@ -177,7 +177,7 @@ print_results/cheat_check_results.txt
 ## 📊 False Positive Rate Computation
 Use the provided notebook [fpr.ipynb](fpr.ipynb) to calculate the **false positive rate** to flag a model as "contaminated" given the number of activated backdoors, i.e. *the probability for a clean, uncontaminated model to have at least the same amount of activated backdoors,*.
 
-The notebook achieves this by directly using the cumulative distribution function of a binomial distribution. Please check Section 3.2 of our [paper](https://arxiv.org/abs/2505.23001) to see the proof for why the false positive rate is computable like this.
+The notebook achieves this by directly using the cumulative distribution function of a binomial distribution. Please check Section 3.2 of our [paper](https://arxiv.org/abs/2505.23001) to see the proof for why the false positive rate is computable like this. (It's a nice application of certified robustness)
 
 ## 📜 Citation
 If you find our work helpful, please consider citing:
