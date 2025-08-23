@@ -1,6 +1,6 @@
 # DyePack: Provably Flagging Test Set Contamination in LLMs Using Backdoors
 
-This is the official implementation for the **DyePack** framework from the paper:  
+This is the official implementation for the **DyePack** framework from our EMNLP2025 paper:  
 📄 _[DyePack: Provably Flagging Test Set Contamination in LLMs Using Backdoors](https://arxiv.org/abs/2505.23001)_.
 
 DyePack introduces a principled way to **flag test set contamination** in large language models (LLMs) using **stochastic backdoor patterns**, enabling **provable false positive rate (FPR)** guarantees—without needing access to model loss or logits.
